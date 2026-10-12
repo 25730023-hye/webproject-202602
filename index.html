@@ -1,1 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Wireframe MVP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen py-8 px-2 flex items-center justify-center">
 
+    <!-- CENTRAL MOBILE DEVICE FRAME -->
+    <main class="mobile-shell">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="page-home" class="page-view flex-1 flex flex-col justify-between">
+            <div class="overflow-y-auto">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-4 py-3 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 border-2 border-gray-800 bg-white font-black text-xs flex items-center justify-center">E</div>
+                        <h1 class="font-bold text-sm tracking-tight text-gray-900">분리배출 맵</h1>
+                    </div>
+                    <button onclick="switchPage('page-my')" class="w-7 h-7 border border-gray-400 bg-white rounded flex items-center justify-center text-xs">
+                        ☆
+                    </button>
+                </header>
+
+                <!-- Page Content -->
+                <div class="p-4 space-y-4">
+                    <!-- Hero Title -->
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900 leading-tight">
+                            어떻게 버릴까?<br>사진 한 장으로 쉽게 찾기
+                        </h2>
+                        <p class="text-[11px] text-gray-500 mt-1">품목명을 검색하거나 사진 촬영을 시작하세요.</p>
+                    </div>
+
+                    <!-- Search Input Box -->
+                    <div class="relative">
+                        <div class="flex items-center border-2 border-gray-700 rounded-lg px-2.5 py-2 bg-white">
+                            <span class="text-xs text-gray-500 mr-2">⌕</span>
+                            <input type="text" placeholder="검색어 입력 (예: 페트병, 배달용기)" class="w-full text-xs text-gray-800 outline-none placeholder-gray-400 bg-transparent" readonly>
+                            <button onclick="switchPage('page-list')" class="wireframe-btn text-xs px-2.5 py-1 rounded shrink-0 ml-1">
+                                검색
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Camera Scan Block -->
+                    <div onclick="switchPage('page-list')" class="border-2 border-dashed border-gray-400 rounded-xl p-4 bg-gray-50 text-center cursor-pointer hover:bg-gray-100 transition">
+                        <div class="w-12 h-12 wireframe-img-box rounded-lg mx-auto mb-2 flex items-center justify-center">
+                            <span class="text-xs font-mono z-10 bg-white px-1 border border-gray-300">CAM</span>
+                        </div>
+                        <strong class="block text-xs font-bold text-gray-900">[AI 카메라 스캔]</strong>
+                        <p class="text-[11px] text-gray-600 mt-0.5 mb-2.5">쓰레기 사진 촬영 후 자동으로 분류 요령 탐색</p>
+                        <span class="inline-block wireframe-btn text-[11px] px-3 py-1 rounded shadow-sm">
+                            사진 촬영 / 파일 업로드
+                        </span>
+                    </div>
+
+                    <!-- Quick Categories -->
+                    <div>
+                        <span class="text-xs font-bold text-gray-800 block mb-2">카테고리 탐색</span>
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">플라스틱/페트</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">종이/택배상자</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">유리병/캔류</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">비닐/일반쓰레기</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-900 font-bold">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 2: SEARCH / LIST ================= -->
+        <section id="page-list" class="page-view hidden flex-1 flex flex-col justify-between">
+            <div class="overflow-y-auto">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <button onclick="switchPage('page-home')" class="text-xs text-gray-700 font-medium">
+                        ← 이전
+                    </button>
+                    <h2 class="text-xs font-bold text-gray-900">검색 및 AI 분석 결과</h2>
+                    <span class="w-6"></span>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- AI Recognition Pill Card -->
+                    <div class="bg-gray-100 border border-gray-300 rounded-lg p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-gray-700 font-mono">[AI RECOGNITION]</span>
+                            <span class="text-[10px] bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded font-mono border border-gray-300">신뢰도 94%</span>
+                        </div>
+                        <div class="flex gap-2.5 items-center">
+                            <div class="w-12 h-12 wireframe-img-box rounded shrink-0"></div>
+                            <div>
+                                <span class="text-[10px] text-gray-500">인식된 품목:</span>
+                                <h3 class="text-xs font-bold text-gray-900">투명 음료수 페트병</h3>
+                                <p class="text-[10px] text-gray-600">분류: 투명 페트병 별도 배출</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Correction Search Box -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-gray-500 block">품목이 다른가요? 직접 검색:</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" value="투명 페트병" class="flex-1 text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-800" readonly>
+                            <button class="wireframe-btn text-xs px-2.5 py-1.5 rounded">재검색</button>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Pills -->
+                    <div class="flex gap-1 text-[11px] pt-1">
+                        <span class="px-2.5 py-1 bg-gray-800 text-white rounded font-medium">전체</span>
+                        <span class="px-2.5 py-1 bg-gray-100 border border-gray-300 text-gray-700 rounded">플라스틱</span>
+                        <span class="px-2.5 py-1 bg-gray-100 border border-gray-300 text-gray-700 rounded">음료용기</span>
+                    </div>
+
+                    <!-- Result List Cards -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-bold text-gray-800 block">탐색 결과 목록 (3)</span>
+
+                        <!-- Card 1 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">투명 페트병 (생수/음료)</strong>
+                                    <span class="text-[10px] text-gray-500">#라벨제거 #내용물세척 #전용수거함</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">유색/불투명 페트병</strong>
+                                    <span class="text-[10px] text-gray-500">#일반플라스틱배출</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">페트병 뚜껑 및 뚜껑고리</strong>
+                                    <span class="text-[10px] text-gray-500">#플라스틱배출</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-900 font-bold">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 3: DETAIL ================= -->
+        <section id="page-detail" class="page-view hidden flex-1 flex flex-col justify-between">
+            <div class="overflow-y-auto">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <button onclick="switchPage('page-list')" class="text-xs text-gray-700 font-medium">
+                        ← 이전
+                    </button>
+                    <h2 class="text-xs font-bold text-gray-900">배출 가이드 상세</h2>
+                    <button class="w-6 h-6 border border-gray-400 bg-white rounded flex items-center justify-center text-xs">
+                        ☆
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-4">
+                    <!-- Item Header & Wireframe Image Box -->
+                    <div class="space-y-2">
+                        <div class="w-full h-28 wireframe-img-box rounded-lg flex items-center justify-center">
+                            <span class="text-xs font-mono bg-white px-2 py-0.5 border border-gray-300 z-10">[IMAGE]</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded border border-gray-300">구분: 전용 수거함</span>
+                            <h3 class="text-base font-bold text-gray-900 mt-1">투명 페트병 (음료수/생수병)</h3>
+                            <p class="text-[11px] text-gray-500">라벨을 제거한 투명 페트 용기 배출 가이드</p>
+                        </div>
+                    </div>
+
+                    <!-- Core 4 Steps Wireframe Grid -->
+                    <div>
+                        <strong class="text-xs font-bold text-gray-800 block mb-1.5">핵심 4단계 배출 수칙</strong>
+                        <div class="grid grid-cols-2 gap-1.5 text-center text-[10px]">
+                            <div class="p-2 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">1. 비운다</span>
+                                <span class="text-[9px] text-gray-500">내용물 완전히 비우기</span>
+                            </div>
+                            <div class="p-2 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">2. 헹군다</span>
+                                <span class="text-[9px] text-gray-500">물로 깨끗이 헹구기</span>
+                            </div>
+                            <div class="p-2 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">3. 분리한다</span>
+                                <span class="text-[9px] text-gray-500">비닐 라벨 떼어내기</span>
+                            </div>
+                            <div class="p-2 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">4. 섞지않는다</span>
+                                <span class="text-[9px] text-gray-500">투명페트 전용함 배출</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step by Step Detailed Instructions -->
+                    <div class="space-y-2 text-xs">
+                        <strong class="font-bold text-gray-800 block">상세 세부 단계</strong>
+
+                        <div class="p-2.5 border border-gray-300 rounded bg-white flex gap-2">
+                            <span class="w-4 h-4 rounded-full bg-gray-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">1</span>
+                            <div>
+                                <strong class="font-bold text-gray-900 block text-[11px]">내용물 및 이물질 비우기</strong>
+                                <p class="text-gray-600 text-[10px]">용기 안 음료나 물을 완전히 비우고 물로 헹굽니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 border border-gray-300 rounded bg-white flex gap-2">
+                            <span class="w-4 h-4 rounded-full bg-gray-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">2</span>
+                            <div>
+                                <strong class="font-bold text-gray-900 block text-[11px]">겉면 라벨 제거하기</strong>
+                                <p class="text-gray-600 text-[10px]">비닐 라벨을 별도로 떼어내어 비닐류에 배출합니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 border border-gray-300 rounded bg-white flex gap-2">
+                            <span class="w-4 h-4 rounded-full bg-gray-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0">3</span>
+                            <div>
+                                <strong class="font-bold text-gray-900 block text-[11px]">압착 후 뚜껑 닫아 배출</strong>
+                                <p class="text-gray-600 text-[10px]">부피를 찌그러뜨린 뒤 뚜껑을 닫아 전용 수거함에 넣습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Area -->
+                    <div class="pt-2">
+                        <button onclick="switchPage('page-my')" class="w-full wireframe-btn py-2 text-xs rounded shadow-sm flex items-center justify-center gap-1">
+                            <span>☆</span> <span>보관함에 추가하기</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 4: MY PAGE ================= -->
+        <section id="page-my" class="page-view hidden flex-1 flex flex-col justify-between">
+            <div class="overflow-y-auto">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-900">내 보관함</h2>
+                    <button onclick="toggleEmptyState()" class="text-[10px] border border-gray-400 bg-white px-1.5 py-0.5 rounded font-mono">
+                        [상태 토글]
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- Tab Switcher -->
+                    <div class="flex border-b border-gray-300 text-xs">
+                        <button class="flex-1 pb-1.5 border-b-2 border-gray-900 font-bold text-gray-900 text-center">
+                            즐겨찾기
+                        </button>
+                        <button class="flex-1 pb-1.5 text-gray-400 text-center">
+                            최근 본 가이드
+                        </button>
+                    </div>
+
+                    <!-- FILLED STATE CONTAINER -->
+                    <div id="saved-state-filled" class="space-y-2">
+                        <span class="text-[10px] text-gray-500 block">저장된 항목 (2)</span>
+
+                        <!-- Item Card 1 -->
+                        <div class="wireframe-card p-2.5 rounded-lg flex items-center justify-between">
+                            <div onclick="switchPage('page-detail')" class="flex items-center gap-2.5 cursor-pointer">
+                                <div class="w-9 h-9 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">투명 페트병</strong>
+                                    <span class="text-[10px] text-gray-500">라벨 제거 후 전용수거함</span>
+                                </div>
+                            </div>
+                            <button class="text-xs text-gray-400 hover:text-gray-900 px-1.5 py-1">✕</button>
+                        </div>
+
+                        <!-- Item Card 2 -->
+                        <div class="wireframe-card p-2.5 rounded-lg flex items-center justify-between">
+                            <div onclick="switchPage('page-detail')" class="flex items-center gap-2.5 cursor-pointer">
+                                <div class="w-9 h-9 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">배달 떡볶이 용기</strong>
+                                    <span class="text-[10px] text-gray-500">양념 헹군 후 플라스틱</span>
+                                </div>
+                            </div>
+                            <button class="text-xs text-gray-400 hover:text-gray-900 px-1.5 py-1">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- EMPTY STATE CONTAINER (TOGGLEABLE) -->
+                    <div id="saved-state-empty" class="hidden p-6 border border-dashed border-gray-300 rounded-lg text-center space-y-2 bg-gray-50">
+                        <div class="w-10 h-10 wireframe-img-box rounded-full mx-auto flex items-center justify-center">
+                            <span class="text-xs font-mono">0</span>
+                        </div>
+                        <strong class="text-xs font-bold text-gray-800 block">보관함이 비어있습니다</strong>
+                        <p class="text-[10px] text-gray-500">자주 검색하는 분리배출 항목을 즐겨찾기에 추가해보세요.</p>
+                        <button onclick="switchPage('page-home')" class="wireframe-btn text-[11px] px-3 py-1 rounded mt-1">
+                            품목 탐색하러 가기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-900 font-bold">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
