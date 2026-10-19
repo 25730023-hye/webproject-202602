@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort Wireframe MVP 2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Full Height Clean Viewport Container */
+        .mobile-shell {
+            width: 100%;
+            max-width: 375px;
+            height: 100vh;
+            max-height: 812px;
+            background-color: #ffffff;
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Lo-Fi Diagonal Cross Placeholder Box */
+        .wireframe-img-box {
+            position: relative;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            overflow: hidden;
+        }
+
+        .wireframe-img-box::before,
+        .wireframe-img-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top right, transparent calc(50% - 1px), #adb5bd 50%, transparent calc(50% + 1px));
+        }
+
+        .wireframe-img-box::after {
+            background: linear-gradient(to bottom right, transparent calc(50% - 1px), #adb5bd 50%, transparent calc(50% + 1px));
+        }
+
+        /* Wireframe Custom Utilities */
+        .wireframe-btn {
+            border: 1px solid #495057;
+            background-color: #ffffff;
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .wireframe-btn:hover {
+            background-color: #e9ecef;
+        }
+
+        .wireframe-card {
+            border: 1px solid #ced4da;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CENTRAL MOBILE DEVICE FRAME -->
+    <main class="mobile-shell">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="page-home" class="page-view flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-4 py-3 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 border-2 border-gray-800 bg-white font-black text-xs flex items-center justify-center">E</div>
+                        <h1 class="font-bold text-sm tracking-tight text-gray-900">분리배출 맵 2.0</h1>
+                    </div>
+                    <button onclick="switchPage('page-my')" class="w-7 h-7 border border-gray-400 bg-white rounded flex items-center justify-center text-xs">
+                        ☆
+                    </button>
+                </header>
+
+                <!-- Page Content -->
+                <div class="p-4 space-y-4">
+                    <!-- Hero Title -->
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900 leading-tight">
+                            어떻게 버릴까?<br>오염도 진단과 맞춤 세척 가이드
+                        </h2>
+                        <p class="text-[11px] text-gray-500 mt-1">사진 한 장으로 품목과 오염 수준을 진단하세요.</p>
+                    </div>
+
+                    <!-- Search Input Box -->
+                    <div class="relative">
+                        <div class="flex items-center border-2 border-gray-700 rounded-lg px-2.5 py-2 bg-white">
+                            <span class="text-xs text-gray-500 mr-2">⌕</span>
+                            <input type="text" placeholder="검색어 입력 (예: 떡볶이 용기, 페트병)" class="w-full text-xs text-gray-800 outline-none placeholder-gray-400 bg-transparent" readonly>
+                            <button onclick="switchPage('page-list')" class="wireframe-btn text-xs px-2.5 py-1 rounded shrink-0 ml-1">
+                                검색
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Camera Scan Block -->
+                    <div onclick="switchPage('page-list')" class="border-2 border-dashed border-gray-400 rounded-xl p-4 bg-gray-50 text-center cursor-pointer hover:bg-gray-100 transition">
+                        <div class="w-12 h-12 wireframe-img-box rounded-lg mx-auto mb-2 flex items-center justify-center">
+                            <span class="text-xs font-mono z-10 bg-white px-1 border border-gray-300">CAM</span>
+                        </div>
+                        <strong class="block text-xs font-bold text-gray-900">[AI 카메라 & 오염도 스캔]</strong>
+                        <p class="text-[11px] text-gray-600 mt-0.5 mb-2.5">품목 식별 + 남은 양념/착색 오염도 자동 측정</p>
+                        <span class="inline-block wireframe-btn text-[11px] px-3 py-1 rounded shadow-sm">
+                            사진 촬영 / 오염도 진단
+                        </span>
+                    </div>
+
+                    <!-- Quick Categories -->
+                    <div>
+                        <span class="text-xs font-bold text-gray-800 block mb-2">카테고리 탐색</span>
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">배달용기/플라스틱</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">투명/유색 페트병</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">종이/택배상자</span>
+                            </div>
+                            <div onclick="switchPage('page-list')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100">
+                                <div class="w-7 h-7 wireframe-img-box rounded shrink-0"></div>
+                                <span class="font-medium text-gray-800 text-[11px]">비닐/일반쓰레기</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2.5 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-900 font-bold">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 2: SEARCH / LIST (WITH [확인하기] BUTTON) ================= -->
+        <section id="page-list" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <button onclick="switchPage('page-home')" class="text-xs text-gray-700 font-medium">
+                        ← 이전
+                    </button>
+                    <h2 class="text-xs font-bold text-gray-900">검색 및 AI 분석 결과</h2>
+                    <span class="w-6"></span>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- AI Recognition Card with [확인하기] Button -->
+                    <div class="bg-gray-100 border border-gray-300 rounded-lg p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-gray-700 font-mono">[AI 진단]</span>
+                            <span class="text-[10px] bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded font-mono border border-gray-300">오염도 Level 2</span>
+                        </div>
+                        
+                        <!-- Added [확인하기] CTA Button -->
+                        <div class="pt-0.5 pb-1">
+                            <button onclick="switchPage('page-detail')" class="w-full wireframe-btn py-1.5 text-xs rounded bg-white hover:bg-gray-200 transition flex items-center justify-center gap-1 shadow-sm">
+                                <span>[확인하기]</span>
+                                <span class="text-[10px] text-gray-500">상세 배출 가이드 이동 →</span>
+                            </button>
+                        </div>
+
+                        <div class="flex gap-2.5 items-center pt-1 border-t border-gray-200">
+                            <div class="w-12 h-12 wireframe-img-box rounded shrink-0"></div>
+                            <div>
+                                <span class="text-[10px] text-gray-500">인식 품목:</span>
+                                <h3 class="text-xs font-bold text-gray-900">배달 떡볶이 플라스틱 용기</h3>
+                                <p class="text-[10px] text-gray-600">오염 상태: 양념 착색 중 (약 35%)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Correction Search Box -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-gray-500 block">품목이 다른가요? 직접 검색:</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" value="배달 떡볶이 용기" class="flex-1 text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-800" readonly>
+                            <button class="wireframe-btn text-xs px-2.5 py-1.5 rounded">재검색</button>
+                        </div>
+                    </div>
+
+                    <!-- Result List Cards -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-bold text-gray-800 block">탐색 결과 목록 (3)</span>
+
+                        <!-- Card 1 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">배달 용기 (PP 플라스틱)</strong>
+                                    <span class="text-[10px] text-gray-500">오염L2 · 주방세제 추천 · 예상물 1.5L</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">심하게 오염된 배달용기</strong>
+                                    <span class="text-[10px] text-gray-500">오염L3 · 세척불가 · 종량제 배출</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div onclick="switchPage('page-detail')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-50">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">투명 페트병 (생수/음료)</strong>
+                                    <span class="text-[10px] text-gray-500">오염L1 · 물세척 0.5L · 전용함</span>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400">→</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2.5 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-900 font-bold">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 3: DETAIL (TARGET PAGE) ================= -->
+        <section id="page-detail" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <button onclick="switchPage('page-list')" class="text-xs text-gray-700 font-medium">
+                        ← 이전
+                    </button>
+                    <h2 class="text-xs font-bold text-gray-900">배출 가이드 상세 2.0</h2>
+                    <button class="w-6 h-6 border border-gray-400 bg-white rounded flex items-center justify-center text-xs">
+                        ☆
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- Item Header & Wireframe Image Box -->
+                    <div class="space-y-1.5">
+                        <div class="w-full h-24 wireframe-img-box rounded-lg flex items-center justify-center">
+                            <span class="text-xs font-mono bg-white px-2 py-0.5 border border-gray-300 z-10">[IMAGE: 배달 떡볶이 용기]</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded border border-gray-300">구분: 플라스틱 (PP)</span>
+                            <h3 class="text-sm font-bold text-gray-900 mt-1">배달 떡볶이 용기 세척 가이드</h3>
+                        </div>
+                    </div>
+
+                    <!-- 1. AI POLLUTION DIAGNOSIS CARD -->
+                    <div class="border border-gray-400 bg-gray-50 rounded-lg p-2.5 space-y-1.5">
+                        <div class="flex justify-between items-center border-b border-gray-300 pb-1">
+                            <strong class="text-xs font-bold text-gray-900">🔍 AI 오염도 진단 결과</strong>
+                            <span class="text-[10px] font-mono bg-gray-800 text-white px-1.5 py-0.5 rounded">Level 2 (보통)</span>
+                        </div>
+                        <div class="text-[11px] space-y-0.5 text-gray-700">
+                            <div>• <strong>오염 상태:</strong> 국물/기름기 착색 진행 중 (약 35%)</div>
+                            <div>• <strong>재활용 가능 여부:</strong> 세척 후 재활용 가능</div>
+                        </div>
+                    </div>
+
+                    <!-- 2. DETERGENT & WATER USAGE SOLUTION -->
+                    <div class="border border-gray-400 bg-white rounded-lg p-2.5 space-y-1.5">
+                        <strong class="text-xs font-bold text-gray-900 block border-b border-gray-200 pb-1">💧 맞춤 세척 및 물 사용량 안내</strong>
+                        <div class="text-[11px] space-y-1 text-gray-800">
+                            <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
+                                <span><strong>추천 세제:</strong> 주방세제 1~2펌프</span>
+                                <span class="text-[10px] text-gray-500">(미온수 사용)</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
+                                <span><strong>예상 물 사용량:</strong> 약 1.5 L</span>
+                                <span class="text-[10px] text-gray-500">(500ml 3컵 분량)</span>
+                            </div>
+                            <p class="text-[10px] text-gray-600 bg-gray-100 p-1.5 rounded">
+                                💡 <strong>착색 제거 팁:</strong> 주방세제 세척 후 남아있는 붉은 자국은 햇빛에 하루 동안 말리면 깨끗이 소멸됩니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. FALLBACK JUDGMENT RULE -->
+                    <div class="border border-dashed border-gray-400 bg-gray-50 rounded-lg p-2 text-[10px] text-gray-700 space-y-0.5">
+                        <strong class="font-bold block text-gray-900">⚠️ 일반쓰레기 전환 판정 기준</strong>
+                        <p>세척 후에도 빨간 양념 착색이 깊게 남아 지워지지 않는 용기(Level 3 이상)는 재활용이 불가하므로 <strong>종량제 봉투(일반쓰레기)</strong>로 배출해주세요.</p>
+                    </div>
+
+                    <!-- 4. CORE 4 STEPS GRID -->
+                    <div>
+                        <strong class="text-xs font-bold text-gray-800 block mb-1">기본 4단계 배출 수칙</strong>
+                        <div class="grid grid-cols-2 gap-1 text-center text-[10px]">
+                            <div class="p-1.5 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">1. 비운다</span>
+                                <span class="text-[9px] text-gray-500">내용물 완전히 비우기</span>
+                            </div>
+                            <div class="p-1.5 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">2. 헹군다</span>
+                                <span class="text-[9px] text-gray-500">추천세제+1.5L 세척</span>
+                            </div>
+                            <div class="p-1.5 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">3. 분리한다</span>
+                                <span class="text-[9px] text-gray-500">실링 비닐 테두리 제거</span>
+                            </div>
+                            <div class="p-1.5 border border-gray-300 bg-gray-50 rounded">
+                                <span class="font-bold text-gray-900 block">4. 섞지않는다</span>
+                                <span class="text-[9px] text-gray-500">플라스틱 수거함 배출</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Area -->
+                    <div class="pt-1">
+                        <button onclick="switchPage('page-my')" class="w-full wireframe-btn py-2 text-xs rounded shadow-sm flex items-center justify-center gap-1">
+                            <span>☆</span> <span>보관함에 추가하기</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2.5 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-600">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 4: MY PAGE ================= -->
+        <section id="page-my" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1">
+                <!-- Status Bar -->
+                <div class="h-6 bg-gray-900 px-4 flex justify-between items-center text-[10px] text-gray-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-gray-100 border-b border-gray-300 px-3 py-2.5 flex justify-between items-center">
+                    <h2 class="text-xs font-bold text-gray-900">내 보관함</h2>
+                    <button onclick="toggleEmptyState()" class="text-[10px] border border-gray-400 bg-white px-1.5 py-0.5 rounded font-mono">
+                        [상태 토글]
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- Tab Switcher -->
+                    <div class="flex border-b border-gray-300 text-xs">
+                        <button class="flex-1 pb-1.5 border-b-2 border-gray-900 font-bold text-gray-900 text-center">
+                            즐겨찾기
+                        </button>
+                        <button class="flex-1 pb-1.5 text-gray-400 text-center">
+                            최근 본 가이드
+                        </button>
+                    </div>
+
+                    <!-- FILLED STATE CONTAINER -->
+                    <div id="saved-state-filled" class="space-y-2">
+                        <span class="text-[10px] text-gray-500 block">저장된 항목 (2)</span>
+
+                        <!-- Item Card 1 -->
+                        <div class="wireframe-card p-2.5 rounded-lg flex items-center justify-between">
+                            <div onclick="switchPage('page-detail')" class="flex items-center gap-2.5 cursor-pointer">
+                                <div class="w-9 h-9 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">배달 떡볶이 용기</strong>
+                                    <span class="text-[10px] text-gray-500">오염L2 · 주방세제 · 예상물 1.5L</span>
+                                </div>
+                            </div>
+                            <button class="text-xs text-gray-400 hover:text-gray-900 px-1.5 py-1">✕</button>
+                        </div>
+
+                        <!-- Item Card 2 -->
+                        <div class="wireframe-card p-2.5 rounded-lg flex items-center justify-between">
+                            <div onclick="switchPage('page-detail')" class="flex items-center gap-2.5 cursor-pointer">
+                                <div class="w-9 h-9 wireframe-img-box rounded shrink-0"></div>
+                                <div>
+                                    <strong class="block text-xs font-bold text-gray-900">투명 페트병</strong>
+                                    <span class="text-[10px] text-gray-500">오염L1 · 물세척 0.5L · 전용수거함</span>
+                                </div>
+                            </div>
+                            <button class="text-xs text-gray-400 hover:text-gray-900 px-1.5 py-1">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- EMPTY STATE CONTAINER (TOGGLEABLE) -->
+                    <div id="saved-state-empty" class="hidden p-6 border border-dashed border-gray-300 rounded-lg text-center space-y-2 bg-gray-50">
+                        <div class="w-10 h-10 wireframe-img-box rounded-full mx-auto flex items-center justify-center">
+                            <span class="text-xs font-mono">0</span>
+                        </div>
+                        <strong class="text-xs font-bold text-gray-800 block">보관함이 비어있습니다</strong>
+                        <p class="text-[10px] text-gray-500">자주 검색하는 분리배출 항목을 즐겨찾기에 추가해보세요.</p>
+                        <button onclick="switchPage('page-home')" class="wireframe-btn text-[11px] px-3 py-1 rounded mt-1">
+                            품목 탐색하러 가기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-gray-300 bg-gray-100 grid grid-cols-3 text-center text-[10px] py-2.5 font-medium text-gray-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-gray-600">
+                    <div class="text-sm">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-gray-600">
+                    <div class="text-sm">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-gray-900 font-bold">
+                    <div class="text-sm">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+    </main>
+
+    <script>
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.remove('hidden');
+            }
+
+            const keyMap = {
+                'page-home': 'home',
+                'page-list': 'list',
+                'page-detail': 'list',
+                'page-my': 'my'
+            };
+            const activeKey = keyMap[pageId] || 'home';
+
+            ['home', 'list', 'my'].forEach(key => {
+                document.querySelectorAll('.nav-btn-' + key).forEach(btn => {
+                    if (key === activeKey) {
+                        btn.className = 'nav-btn-' + key + ' text-gray-900 font-bold';
+                    } else {
+                        btn.className = 'nav-btn-' + key + ' text-gray-600';
+                    }
+                });
+            });
+        }
+
+        function toggleEmptyState() {
+            const filledState = document.getElementById('saved-state-filled');
+            const emptyState = document.getElementById('saved-state-empty');
+
+            if (filledState && emptyState) {
+                if (filledState.classList.contains('hidden')) {
+                    filledState.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                } else {
+                    filledState.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
