@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort - 분리배출 맵 2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mobile Container Frame */
+        .mobile-shell {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background-color: #ffffff;
+            border-left: 1px solid #cbd5e1;
+            border-right: 1px solid #cbd5e1;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        /* Custom Wireframe Image Box with Canvas / SVG Fallbacks */
+        .wireframe-img-box {
+            position: relative;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+        }
+
+        .wireframe-img-box::before,
+        .wireframe-img-box::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top right, transparent calc(50% - 1px), #cbd5e1 50%, transparent calc(50% + 1px));
+        }
+
+        .wireframe-img-box::after {
+            background: linear-gradient(to bottom right, transparent calc(50% - 1px), #cbd5e1 50%, transparent calc(50% + 1px));
+        }
+
+        /* Buttons & Cards */
+        .wireframe-btn {
+            border: 1px solid #334155;
+            background-color: #ffffff;
+            color: #0f172a;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .wireframe-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        .wireframe-card {
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .wireframe-card:hover {
+            border-color: #94a3b8;
+        }
+
+        /* Custom Scrollbar for smooth mobile scrolling */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Scan Animation */
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 90%; }
+            100% { top: 0%; }
+        }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: scan 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="mobile-shell">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="page-home" class="page-view flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1 custom-scroll">
+                <!-- Status Bar -->
+                <div class="h-6 bg-slate-900 px-4 flex justify-between items-center text-[10px] text-slate-300 font-mono shrink-0">
+                    <span id="current-time">09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-slate-100 border-b border-slate-300 px-4 py-3 flex justify-between items-center sticky top-0 z-20">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 border-2 border-slate-900 bg-white font-black text-xs flex items-center justify-center rounded">E</div>
+                        <h1 class="font-bold text-sm tracking-tight text-slate-900">분리배출 맵 2.0</h1>
+                    </div>
+                    <button onclick="switchPage('page-my')" class="w-7 h-7 border border-slate-400 bg-white rounded flex items-center justify-center text-xs hover:bg-slate-50">
+                        ☆
+                    </button>
+                </header>
+
+                <!-- Page Content -->
+                <div class="p-4 space-y-4">
+                    <!-- Hero Title -->
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-900 leading-tight">
+                            어떻게 버릴까?<br><span class="text-emerald-700">오염도 진단과 맞춤 세척 가이드</span>
+                        </h2>
+                        <p class="text-[11px] text-slate-500 mt-1">사진 한 장으로 품목과 오염 수준을 진단하세요.</p>
+                    </div>
+
+                    <!-- Search Input Box -->
+                    <div class="relative">
+                        <div class="flex items-center border-2 border-slate-700 rounded-lg px-2.5 py-1.5 bg-white shadow-sm focus-within:border-emerald-600">
+                            <span class="text-xs text-slate-500 mr-2">⌕</span>
+                            <input id="home-search-input" type="text" placeholder="검색어 입력 (예: 떡볶이 용기, 페트병)" class="w-full text-xs text-slate-800 outline-none placeholder-slate-400 bg-transparent">
+                            <button onclick="handleHomeSearch()" class="wireframe-btn text-xs px-3 py-1 rounded shrink-0 ml-1 bg-slate-900 text-white border-slate-900">
+                                검색
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Camera Scan Block -->
+                    <div onclick="openCameraModal()" class="border-2 border-dashed border-emerald-500 rounded-xl p-4 bg-emerald-50/50 text-center cursor-pointer hover:bg-emerald-100/50 transition relative overflow-hidden group">
+                        <div class="w-12 h-12 bg-white rounded-lg mx-auto mb-2 flex items-center justify-center border border-emerald-300 shadow-sm">
+                            <span class="text-lg">📷</span>
+                        </div>
+                        <strong class="block text-xs font-bold text-slate-900">[AI 카메라 & 오염도 스캔]</strong>
+                        <p class="text-[11px] text-slate-600 mt-0.5 mb-2.5">품목 식별 + 남은 양념/착색 오염도 자동 측정</p>
+                        <span class="inline-block wireframe-btn text-[11px] px-3.5 py-1.5 rounded shadow-sm bg-emerald-600 text-white border-emerald-700 font-bold group-hover:bg-emerald-700">
+                            사진 촬영 / 오염도 진단
+                        </span>
+                    </div>
+
+                    <!-- Quick Categories -->
+                    <div>
+                        <span class="text-xs font-bold text-slate-800 block mb-2">카테고리 탐색</span>
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div onclick="filterByCategory('배달용기/플라스틱')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2.5 cursor-pointer hover:bg-slate-50">
+                                <div class="w-7 h-7 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-xs shrink-0">🍱</div>
+                                <span class="font-medium text-slate-800 text-[11px]">배달용기/플라스틱</span>
+                            </div>
+                            <div onclick="filterByCategory('페트병')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2.5 cursor-pointer hover:bg-slate-50">
+                                <div class="w-7 h-7 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-xs shrink-0">🥤</div>
+                                <span class="font-medium text-slate-800 text-[11px]">투명/유색 페트병</span>
+                            </div>
+                            <div onclick="filterByCategory('종이/택배')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2.5 cursor-pointer hover:bg-slate-50">
+                                <div class="w-7 h-7 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-xs shrink-0">📦</div>
+                                <span class="font-medium text-slate-800 text-[11px]">종이/택배상자</span>
+                            </div>
+                            <div onclick="filterByCategory('비닐/캔')" class="wireframe-card p-2.5 rounded-lg flex items-center gap-2.5 cursor-pointer hover:bg-slate-50">
+                                <div class="w-7 h-7 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-xs shrink-0">🥫</div>
+                                <span class="font-medium text-slate-800 text-[11px]">비닐/음료캔/유리</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-slate-300 bg-slate-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-slate-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-slate-900 font-bold">
+                    <div class="text-base">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-slate-600">
+                    <div class="text-base">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-slate-600">
+                    <div class="text-base">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 2: SEARCH / LIST ================= -->
+        <section id="page-list" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1 custom-scroll">
+                <!-- Status Bar -->
+                <div class="h-6 bg-slate-900 px-4 flex justify-between items-center text-[10px] text-slate-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-slate-100 border-b border-slate-300 px-3 py-2.5 flex justify-between items-center sticky top-0 z-20">
+                    <button onclick="switchPage('page-home')" class="text-xs text-slate-700 font-medium">
+                        ← 이전
+                    </button>
+                    <h2 class="text-xs font-bold text-slate-900">검색 및 AI 분석 결과</h2>
+                    <span class="w-6"></span>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- AI Recognition Banner -->
+                    <div id="ai-banner" class="bg-emerald-50 border border-emerald-300 rounded-lg p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-emerald-800 font-mono">[AI 진단 완료]</span>
+                            <span id="ai-banner-level" class="text-[10px] bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded font-mono border border-emerald-300 font-bold">오염도 Level 2</span>
+                        </div>
+                        
+                        <div class="flex gap-2.5 items-center pt-1 border-t border-emerald-200/60">
+                            <div id="ai-banner-img" class="w-12 h-12 bg-white rounded flex items-center justify-center text-xl shrink-0 border border-emerald-200 shadow-sm">
+                                🥘
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-500">인식 품목:</span>
+                                <h3 id="ai-banner-title" class="text-xs font-bold text-slate-900">배달 떡볶이 플라스틱 용기</h3>
+                                <p id="ai-banner-desc" class="text-[10px] text-emerald-800">오염 상태: 양념 착색 중 (약 35%)</p>
+                            </div>
+                        </div>
+
+                        <!-- [확인하기] CTA Button -->
+                        <div class="pt-1">
+                            <button id="ai-banner-btn" onclick="openDetailFromAI()" class="w-full wireframe-btn py-1.5 text-xs rounded bg-white hover:bg-emerald-100 transition flex items-center justify-center gap-1 shadow-sm border-emerald-600 text-emerald-900 font-bold">
+                                <span>[확인하기]</span>
+                                <span class="text-[10px] text-slate-600">상세 배출 가이드 이동 →</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Correction Search Box -->
+                    <div class="space-y-1">
+                        <label class="text-[10px] text-slate-500 block">품목이 다른가요? 직접 검색:</label>
+                        <div class="flex gap-1.5">
+                            <input id="list-search-input" type="text" placeholder="검색어를 입력하세요..." class="flex-1 text-xs border border-slate-300 rounded px-2 py-1.5 bg-white text-slate-800 outline-none focus:border-slate-800">
+                            <button onclick="handleListSearch()" class="wireframe-btn text-xs px-3 py-1.5 rounded">검색</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Badge Indicators -->
+                    <div id="filter-indicator" class="hidden flex items-center justify-between bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                        <span id="filter-text" class="text-[10px] text-slate-600 font-medium"></span>
+                        <button onclick="resetFilters()" class="text-[10px] text-slate-400 hover:text-slate-800 underline">초기화</button>
+                    </div>
+
+                    <!-- Dynamic Result List Cards -->
+                    <div class="space-y-2 pt-1">
+                        <span id="result-count" class="text-xs font-bold text-slate-800 block">탐색 결과 목록 (0)</span>
+                        <div id="item-list-container" class="space-y-2">
+                            <!-- Dynamically Injected -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-slate-300 bg-slate-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-slate-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-slate-600">
+                    <div class="text-base">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-slate-900 font-bold">
+                    <div class="text-base">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-slate-600">
+                    <div class="text-base">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 3: DETAIL ================= -->
+        <section id="page-detail" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1 custom-scroll">
+                <!-- Status Bar -->
+                <div class="h-6 bg-slate-900 px-4 flex justify-between items-center text-[10px] text-slate-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-slate-100 border-b border-slate-300 px-3 py-2.5 flex justify-between items-center sticky top-0 z-20">
+                    <button onclick="switchPage('page-list')" class="text-xs text-slate-700 font-medium">
+                        ← 목록
+                    </button>
+                    <h2 class="text-xs font-bold text-slate-900">배출 가이드 상세 2.0</h2>
+                    <button id="detail-bookmark-btn" onclick="toggleBookmarkCurrentItem()" class="w-6 h-6 border border-slate-400 bg-white rounded flex items-center justify-center text-xs hover:bg-slate-100">
+                        ☆
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- Item Header & Image Display -->
+                    <div class="space-y-2">
+                        <div class="w-full h-28 bg-slate-100 border border-slate-300 rounded-lg flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+                            <span id="detail-item-icon" class="text-4xl mb-1">🍱</span>
+                            <span id="detail-item-img-label" class="text-[10px] font-mono text-slate-400 bg-white/80 px-2 py-0.5 rounded border border-slate-200">구분: 플라스틱 (PP)</span>
+                        </div>
+                        <div>
+                            <span id="detail-item-material-badge" class="text-[10px] font-mono bg-slate-200 text-slate-800 px-2 py-0.5 rounded border border-slate-300 inline-block font-semibold">구분: 플라스틱 (PP)</span>
+                            <h3 id="detail-item-name" class="text-base font-extrabold text-slate-900 mt-1">배달 떡볶이 용기 세척 가이드</h3>
+                        </div>
+                    </div>
+
+                    <!-- 1. AI POLLUTION DIAGNOSIS CARD + Interactive Level Selector -->
+                    <div class="border border-slate-400 bg-slate-50 rounded-lg p-3 space-y-2">
+                        <div class="flex justify-between items-center border-b border-slate-300 pb-1.5">
+                            <strong class="text-xs font-bold text-slate-900 flex items-center gap-1">🔍 AI 오염도 진단 결과</strong>
+                            <span id="detail-level-badge" class="text-[10px] font-mono bg-slate-800 text-white px-2 py-0.5 rounded font-bold">Level 2</span>
+                        </div>
+
+                        <!-- Level Selector Tabs -->
+                        <div class="flex gap-1 pt-0.5">
+                            <button onclick="selectPollutionLevel('level1')" id="level-tab-1" class="flex-1 py-1 text-[10px] font-medium border border-slate-300 rounded bg-white text-slate-600">
+                                Level 1 (양호)
+                            </button>
+                            <button onclick="selectPollutionLevel('level2')" id="level-tab-2" class="flex-1 py-1 text-[10px] font-bold border border-slate-800 rounded bg-slate-800 text-white">
+                                Level 2 (보통)
+                            </button>
+                            <button onclick="selectPollutionLevel('level3')" id="level-tab-3" class="flex-1 py-1 text-[10px] font-medium border border-slate-300 rounded bg-white text-slate-600">
+                                Level 3 (심함)
+                            </button>
+                        </div>
+
+                        <div class="text-[11px] space-y-1 text-slate-700 bg-white p-2.5 rounded border border-slate-200">
+                            <div>• <strong>오염 상태:</strong> <span id="detail-status-desc">국물/기름기 착색 진행 중 (약 35%)</span></div>
+                            <div>• <strong>배출 처리:</strong> <span id="detail-final-disposal" class="font-bold text-emerald-700">플라스틱 전용 수거함</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 2. DETERGENT & WATER USAGE SOLUTION -->
+                    <div class="border border-slate-400 bg-white rounded-lg p-3 space-y-2">
+                        <strong class="text-xs font-bold text-slate-900 block border-b border-slate-200 pb-1.5">💧 맞춤 세척 및 물 사용량 안내</strong>
+                        <div class="text-[11px] space-y-1.5 text-slate-800">
+                            <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-200">
+                                <span><strong>추천 세제:</strong> <span id="detail-detergent">주방세제 1~2펌프</span></span>
+                                <span class="text-[10px] text-slate-500">(미온수 사용)</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-200">
+                                <span><strong>예상 세척팁:</strong> <span id="detail-cleaning-tip">주방세제 세척 후 남아있는 자국은 햇빛 소독</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. FALLBACK JUDGMENT RULE -->
+                    <div class="border border-dashed border-amber-400 bg-amber-50 rounded-lg p-2.5 text-[10px] text-amber-900 space-y-0.5">
+                        <strong class="font-bold block text-amber-950 flex items-center gap-1">⚠️ 일반쓰레기 전환 판정 기준</strong>
+                        <p id="detail-fallback-rule">세척 후에도 빨간 양념 착색이 깊게 남아 지워지지 않는 용기는 재활용이 불가하므로 종량제 봉투(일반쓰레기)로 배출해주세요.</p>
+                    </div>
+
+                    <!-- 4. CORE STEPS GRID -->
+                    <div>
+                        <strong class="text-xs font-bold text-slate-800 block mb-1.5">기본 배출 수칙 (4단계)</strong>
+                        <div id="detail-steps-grid" class="grid grid-cols-2 gap-1.5 text-center text-[10px]">
+                            <!-- Dynamically Populated -->
+                        </div>
+                    </div>
+
+                    <!-- Action Area -->
+                    <div class="pt-1">
+                        <button id="action-bookmark-btn" onclick="toggleBookmarkCurrentItem()" class="w-full wireframe-btn py-2 text-xs rounded shadow-sm flex items-center justify-center gap-1 bg-slate-900 text-white border-slate-900">
+                            <span id="bookmark-icon">☆</span> <span id="bookmark-text">보관함에 추가하기</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-slate-300 bg-slate-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-slate-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-slate-600">
+                    <div class="text-base">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-slate-600">
+                    <div class="text-base">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-slate-600">
+                    <div class="text-base">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= PAGE 4: MY PAGE ================= -->
+        <section id="page-my" class="page-view hidden flex-1 flex flex-col justify-between overflow-hidden">
+            <div class="overflow-y-auto flex-1 custom-scroll">
+                <!-- Status Bar -->
+                <div class="h-6 bg-slate-900 px-4 flex justify-between items-center text-[10px] text-slate-300 font-mono shrink-0">
+                    <span>09:41</span>
+                    <div class="flex gap-1.5"><span>5G</span><span>100%</span></div>
+                </div>
+
+                <!-- Header -->
+                <header class="bg-slate-100 border-b border-slate-300 px-3 py-2.5 flex justify-between items-center sticky top-0 z-20">
+                    <h2 class="text-xs font-bold text-slate-900">내 보관함</h2>
+                    <button onclick="clearAllBookmarks()" class="text-[10px] border border-red-300 bg-white text-red-600 px-1.5 py-0.5 rounded font-mono hover:bg-red-50">
+                        [전체 삭제]
+                    </button>
+                </header>
+
+                <div class="p-4 space-y-3.5">
+                    <!-- Tab Switcher -->
+                    <div class="flex border-b border-slate-300 text-xs">
+                        <button id="tab-btn-bookmarks" onclick="switchMyTab('bookmarks')" class="flex-1 pb-1.5 border-b-2 border-slate-900 font-bold text-slate-900 text-center">
+                            즐겨찾기 (<span id="bookmark-count">0</span>)
+                        </button>
+                        <button id="tab-btn-recent" onclick="switchMyTab('recent')" class="flex-1 pb-1.5 text-slate-400 text-center font-medium border-b-2 border-transparent">
+                            최근 본 가이드
+                        </button>
+                    </div>
+
+                    <!-- FILLED STATE CONTAINER -->
+                    <div id="saved-state-filled" class="space-y-2">
+                        <!-- Dynamic Bookmark Cards -->
+                    </div>
+
+                    <!-- EMPTY STATE CONTAINER -->
+                    <div id="saved-state-empty" class="hidden p-6 border border-dashed border-slate-300 rounded-lg text-center space-y-2 bg-slate-50 my-4">
+                        <div class="w-10 h-10 bg-slate-200 rounded-full mx-auto flex items-center justify-center text-slate-500 font-mono text-xs">
+                            ☆
+                        </div>
+                        <strong class="text-xs font-bold text-slate-800 block">보관함이 비어있습니다</strong>
+                        <p class="text-[10px] text-slate-500">자주 검색하는 분리배출 항목을 즐겨찾기에 추가해보세요.</p>
+                        <button onclick="switchPage('page-home')" class="wireframe-btn text-[11px] px-3 py-1 rounded mt-1 bg-slate-900 text-white">
+                            품목 탐색하러 가기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <nav class="border-t border-slate-300 bg-slate-100 grid grid-cols-3 text-center text-[10px] py-2 font-medium text-slate-600 shrink-0">
+                <button onclick="switchPage('page-home')" class="nav-btn-home text-slate-600">
+                    <div class="text-base">⌂</div>
+                    <span>홈</span>
+                </button>
+                <button onclick="switchPage('page-list')" class="nav-btn-list text-slate-600">
+                    <div class="text-base">⌕</div>
+                    <span>검색</span>
+                </button>
+                <button onclick="switchPage('page-my')" class="nav-btn-my text-slate-900 font-bold">
+                    <div class="text-base">☆</div>
+                    <span>마이</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- ================= MODAL: AI CAMERA SCANNER ================= -->
+        <div id="camera-modal" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white w-full rounded-xl overflow-hidden border border-slate-300 shadow-2xl flex flex-col space-y-3 p-4">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <strong class="text-xs font-bold text-slate-900 flex items-center gap-1">📷 AI 오염도 스캐너</strong>
+                    <button onclick="closeCameraModal()" class="text-xs font-bold text-slate-400 hover:text-slate-800">✕</button>
+                </div>
+
+                <!-- Simulation Viewport -->
+                <div class="relative w-full h-44 bg-slate-900 rounded-lg overflow-hidden flex flex-col items-center justify-center text-white">
+                    <div class="scan-line"></div>
+                    <div id="modal-preview-icon" class="text-5xl mb-2 animate-pulse">🍱</div>
+                    <span id="modal-scan-status" class="text-[11px] font-mono text-emerald-400 bg-slate-800/80 px-2 py-0.5 rounded border border-emerald-500/40">
+                        품목 및 착색 오염도 분석 중...
+                    </span>
+                </div>
+
+                <div class="space-y-1.5">
+                    <span class="text-[10px] text-slate-500 block">스캔 샘플 선택 (테스트용):</span>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button onclick="simulateScan('item_001')" class="text-[11px] p-2 border border-slate-300 rounded text-left hover:bg-slate-50 font-medium">
+                            🍱 떡볶이 용기 (L2)
+                        </button>
+                        <button onclick="simulateScan('item_002')" class="text-[11px] p-2 border border-slate-300 rounded text-left hover:bg-slate-50 font-medium">
+                            🥤 투명 페트병 (L1)
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="executeScanResult()" class="w-full py-2 bg-emerald-600 text-white rounded text-xs font-bold hover:bg-emerald-700 shadow-sm transition">
+                    진단 완료 및 가이드 확인 →
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /* ==========================================================================
+           1. EMBEDDED DATASET (ecosort_items_300_2.json Architecture)
+           ========================================================================== */
+        const itemDatabase = {
+            "items": [
+                {
+                    "itemId": "item_001",
+                    "name": "배달 떡볶이 용기",
+                    "category": "배달용기/플라스틱",
+                    "material": "플라스틱 (PP)",
+                    "icon": "🍱",
+                    "basicSteps": [
+                        "남은 떡볶이 국물 및 내용물 완전히 비우기",
+                        "주방세제와 미온수로 양념 착색 부분 헹구기",
+                        "비닐 실링 테두리 스티커 완전 제거하기",
+                        "깨끗이 건조 후 플라스틱 수거함에 배출"
+                    ],
+                    "pollutionGuides": {
+                        "level1": {
+                            "statusDescription": "오염 거의 없음 (투명/약한 국물 자국)",
+                            "recommendedDetergent": "물세척 (미온수)",
+                            "cleaningTip": "가볍게 물로 헹군 후 바로 배출 가능합니다.",
+                            "finalDisposal": "플라스틱 수거함"
+                        },
+                        "level2": {
+                            "statusDescription": "국물 및 기름기 착색 진행 중 (약 35%)",
+                            "recommendedDetergent": "주방세제 1~2펌프",
+                            "cleaningTip": "세제 세척 후 남아있는 붉은 자국은 햇빛에 하루 동안 말리면 소멸됩니다.",
+                            "finalDisposal": "플라스틱 수거함"
+                        },
+                        "level3": {
+                            "statusDescription": "심한 탄 자국 또는 지워지지 않는 세균/양념 착색",
+                            "recommendedDetergent": "세척 불가능",
+                            "cleaningTip": "여러 번 씻어도 착색이 깊게 남은 용기는 재활용 공정에서 탄화됩니다.",
+                            "finalDisposal": "종량제 봉투 (일반쓰레기)"
+                        }
+                    },
+                    "fallbackRule": "세척 후에도 빨간 양념 착색이 깊게 남아 지워지지 않는 용기는 재활용이 불가하므로 종량제 봉투(일반쓰레기)로 배출해주세요."
+                },
+                {
+                    "itemId": "item_002",
+                    "name": "투명 페트병 (생수/음료)",
+                    "category": "페트병",
+                    "material": "페트 (PET)",
+                    "icon": "🥤",
+                    "basicSteps": [
+                        "내용물(생수/음료) 깨끗이 비우기",
+                        "겉면 비닐 라벨지 떼어내기",
+                        "부피를 줄이기 위해 찌그러뜨리기",
+                        "뚜껑을 닫고 투명 페트병 전용 수거함 배출"
+                    ],
+                    "pollutionGuides": {
+                        "level1": {
+                            "statusDescription": "깨끗한 상태 (음료 잔여물 없음)",
+                            "recommendedDetergent": "가벼운 물 헹굼",
+                            "cleaningTip": "라벨만 제거하면 바로 고품질 리사이클 원사로 재활용됩니다.",
+                            "finalDisposal": "투명 페트병 전용 수거함"
+                        },
+                        "level2": {
+                            "statusDescription": "당분/당음료 잔여물 남아있음",
+                            "recommendedDetergent": "물 0.5L 헹굼",
+                            "cleaningTip": "안쪽 끈적임이 없을 때까지 물로 2~3회 흔들어 헹궈주세요.",
+                            "finalDisposal": "투명 페트병 전용 수거함"
+                        },
+                        "level3": {
+                            "statusDescription": "담배꽁초/기름 등 이물질 심각 오염",
+                            "recommendedDetergent": "세척 불가능",
+                            "cleaningTip": "페트병 내부에 이물질이 들어간 경우 절단 후 씻지 못하면 재활용 불가합니다.",
+                            "finalDisposal": "종량제 봉투 (일반쓰레기)"
+                        }
+                    },
+                    "fallbackRule": "유색 페트병이나 내부에 담배꽁초, 기름 등 화학 이물질이 들어간 페트병은 일반 플라스틱 수거함 또는 종량제 봉투로 분리하세요."
+                },
+                {
+                    "itemId": "item_003",
+                    "name": "택배 종이 상자",
+                    "category": "종이/택배",
+                    "material": "종이류 (골판지)",
+                    "icon": "📦",
+                    "basicSteps": [
+                        "상자에 붙은 테이프 및 운송장 스티커 제거",
+                        "상자 내부 비닐, 스티로폼 내용물 비우기",
+                        "상자를 납작하게 접기",
+                        "종이류 수거함에 차곡차곡 배출"
+                    ],
+                    "pollutionGuides": {
+                        "level1": {
+                            "statusDescription": "테이프 및 운송장이 깔끔하게 제거됨",
+                            "recommendedDetergent": "해당 없음",
+                            "cleaningTip": "접어서 물기에 젖지 않도록 배출하세요.",
+                            "finalDisposal": "종이류 수거함"
+                        },
+                        "level2": {
+                            "statusDescription": "일부 스티커 잔여물 남아있음",
+                            "recommendedDetergent": "손으로 제거",
+                            "cleaningTip": "접착제가 남아있는 부위만 칼로 찢어내어 배출합니다.",
+                            "finalDisposal": "종이류 수거함"
+                        },
+                        "level3": {
+                            "statusDescription": "비/기름/음식물로 젖거나 오염된 종이",
+                            "recommendedDetergent": "세척 불가",
+                            "cleaningTip": "물에 젖어 썩거나 기름이 묻은 종이는 펄프 재활용이 불가능합니다.",
+                            "finalDisposal": "종량제 봉투 (일반쓰레기)"
+                        }
+                    },
+                    "fallbackRule": "기름이나 오염물질이 묻은 종이, 영수증, 택배 운송장 스티커는 종이 재활용이 되지 않으므로 일반쓰레기로 버려야 합니다."
+                },
+                {
+                    "itemId": "item_004",
+                    "name": "음료/통조림 캔",
+                    "category": "비닐/캔",
+                    "material": "금속 (알루미늄/철)",
+                    "icon": "🥫",
+                    "basicSteps": [
+                        "캔 내부 내용물 완전히 비우기",
+                        "물로 내부 양념 및 음료 헹구기",
+                        "플라스틱 뚜껑 등 타 재질 분리",
+                        "발로 찌그러뜨린 후 캔류 수거함 배출"
+                    ],
+                    "pollutionGuides": {
+                        "level1": {
+                            "statusDescription": "깨끗한 음료 캔",
+                            "recommendedDetergent": "물 헹굼",
+                            "cleaningTip": "물로 헹군 뒤 찌그러뜨려 배출하세요.",
+                            "finalDisposal": "캔류 수거함"
+                        },
+                        "level2": {
+                            "statusDescription": "통조림 기름기 잔여물",
+                            "recommendedDetergent": "주방세제 약간",
+                            "cleaningTip": "기름기를 미온수로 씻어낸 후 배출합니다.",
+                            "finalDisposal": "캔류 수거함"
+                        },
+                        "level3": {
+                            "statusDescription": "부식되거나 녹슨 캔",
+                            "recommendedDetergent": "세척 불가",
+                            "cleaningTip": "심하게 녹슬거나 이물질이 눌러붙은 캔은 고철 재활용성이 떨어집니다.",
+                            "finalDisposal": "안전 배출 / 종량제"
+                        }
+                    },
+                    "fallbackRule": "부탄가스 캔이나 스프레이 캔은 반드시 통풍이 잘되는 야외에서 구멍을 뚫어 가스를 뺀 후 배출해야 합니다."
+                },
+                {
+                    "itemId": "item_005",
+                    "name": "오염된 비닐 봉지",
+                    "category": "비닐/캔",
+                    "material": "비닐류 (OTHER)",
+                    "icon": "🛍️",
+                    "basicSteps": [
+                        "비닐 속 이물질 완전히 비우기",
+                        "물로 양념 오염 씻어내기",
+                        "물기 털어 건조시키기",
+                        "비닐류 전용 수거함 배출"
+                    ],
+                    "pollutionGuides": {
+                        "level1": {
+                            "statusDescription": "깨끗한 투명/유색 비닐",
+                            "recommendedDetergent": "해당 없음",
+                            "cleaningTip": "흩날리지 않도록 묶거나 모아서 배출하세요.",
+                            "finalDisposal": "비닐류 수거함"
+                        },
+                        "level2": {
+                            "statusDescription": "음식물 양념 묻음",
+                            "recommendedDetergent": "물 헹굼",
+                            "cleaningTip": "물로 가볍게 씻은 후 배출 가능합니다.",
+                            "finalDisposal": "비닐류 수거함"
+                        },
+                        "level3": {
+                            "statusDescription": "스티커/기름때/접착제 심각",
+                            "recommendedDetergent": "세척 불가",
+                            "cleaningTip": "이물질 제거가 안 되는 비닐은 성형 연료로 사용 불가합니다.",
+                            "finalDisposal": "종량제 봉투 (일반쓰레기)"
+                        }
+                    },
+                    "fallbackRule": "테이프나 스티커가 다량 붙은 비닐, 노끈, 삼베 등은 비닐류 수거함이 아닌 일반쓰레기로 배출하세요."
+                }
+            ]
+        };
+
+        /* ==========================================================================
+           2. STATE MANAGEMENT & LOCAL STORAGE
+           ========================================================================== */
+        let currentItem = itemDatabase.items[0]; // Active item for detail view
+        let selectedLevel = 'level2';           // Default active pollution level
+        let selectedCategoryFilter = null;
+        let activeMyTab = 'bookmarks';
+        let scannedItemId = 'item_001';
+
+        // Load Bookmarks & Recent Items from LocalStorage
+        let bookmarks = JSON.parse(localStorage.getItem('ecosort_bookmarks') || '["item_001"]');
+        let recentViews = JSON.parse(localStorage.getItem('ecosort_recents') || '["item_001", "item_002"]');
+
+        function saveStorage() {
+            localStorage.setItem('ecosort_bookmarks', JSON.stringify(bookmarks));
+            localStorage.setItem('ecosort_recents', JSON.stringify(recentViews));
+        }
+
+        /* ==========================================================================
+           3. NAVIGATION & UI PAGE SWITCHING
+           ========================================================================== */
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.remove('hidden');
+            }
+
+            // Sync Nav Buttons highlight
+            const keyMap = {
+                'page-home': 'home',
+                'page-list': 'list',
+                'page-detail': 'list',
+                'page-my': 'my'
+            };
+            const activeKey = keyMap[pageId] || 'home';
+
+            ['home', 'list', 'my'].forEach(key => {
+                document.querySelectorAll('.nav-btn-' + key).forEach(btn => {
+                    if (key === activeKey) {
+                        btn.className = 'nav-btn-' + key + ' text-slate-900 font-bold';
+                    } else {
+                        btn.className = 'nav-btn-' + key + ' text-slate-600 font-medium';
+                    }
+                });
+            });
+
+            if (pageId === 'page-list') {
+                renderItemList();
+            } else if (pageId === 'page-my') {
+                renderMyPage();
+            }
+        }
+
+        /* ==========================================================================
+           4. HOME PAGE & SEARCH CONTROLLERS
+           ========================================================================== */
+        function handleHomeSearch() {
+            const query = document.getElementById('home-search-input').value.trim();
+            document.getElementById('list-search-input').value = query;
+            selectedCategoryFilter = null;
+            switchPage('page-list');
+        }
+
+        function filterByCategory(category) {
+            selectedCategoryFilter = category;
+            document.getElementById('home-search-input').value = '';
+            document.getElementById('list-search-input').value = '';
+            switchPage('page-list');
+        }
+
+        function handleListSearch() {
+            selectedCategoryFilter = null;
+            renderItemList();
+        }
+
+        function resetFilters() {
+            selectedCategoryFilter = null;
+            document.getElementById('list-search-input').value = '';
+            renderItemList();
+        }
+
+        /* ==========================================================================
+           5. DYNAMIC ITEM LIST RENDERER (PAGE 2)
+           ========================================================================== */
+        function renderItemList() {
+            const query = (document.getElementById('list-search-input').value || '').trim().toLowerCase();
+            const container = document.getElementById('item-list-container');
+            const indicator = document.getElementById('filter-indicator');
+            const filterText = document.getElementById('filter-text');
+
+            if (selectedCategoryFilter) {
+                indicator.classList.remove('hidden');
+                filterText.textContent = `카테고리 필터: ${selectedCategoryFilter}`;
+            } else if (query) {
+                indicator.classList.remove('hidden');
+                filterText.textContent = `검색어: "${query}"`;
+            } else {
+                indicator.classList.add('hidden');
+            }
+
+            // Filter logic
+            const filtered = itemDatabase.items.filter(item => {
+                const matchQuery = !query || item.name.toLowerCase().includes(query) || item.material.toLowerCase().includes(query);
+                const matchCat = !selectedCategoryFilter || item.category === selectedCategoryFilter;
+                return matchQuery && matchCat;
+            });
+
+            document.getElementById('result-count').textContent = `탐색 결과 목록 (${filtered.length})`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 bg-slate-50 border border-dashed border-slate-300 rounded-lg text-slate-500 text-xs">
+                        검색 결과가 없습니다.<br>다른 키워드로 검색해 보세요.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => `
+                <div onclick="openItemDetail('${item.itemId}')" class="wireframe-card p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-xl shrink-0">
+                            ${item.icon}
+                        </div>
+                        <div>
+                            <strong class="block text-xs font-bold text-slate-900">${item.name}</strong>
+                            <span class="text-[10px] text-slate-500">${item.material} · ${item.pollutionGuides.level2.recommendedDetergent}</span>
+                        </div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-bold">→</span>
+                </div>
+            `).join('');
+        }
+
+        /* ==========================================================================
+           6. DETAIL PAGE BINDING & LEVEL TOGGLE (PAGE 3)
+           ========================================================================== */
+        function openItemDetail(itemId) {
+            const found = itemDatabase.items.find(i => i.itemId === itemId);
+            if (!found) return;
+
+            currentItem = found;
+            selectedLevel = 'level2'; // Reset to level 2 on view
+
+            // Add to recent view list
+            if (!recentViews.includes(itemId)) {
+                recentViews.unshift(itemId);
+                if (recentViews.length > 10) recentViews.pop();
+                saveStorage();
+            }
+
+            renderDetailView();
+            switchPage('page-detail');
+        }
+
+        function renderDetailView() {
+            if (!currentItem) return;
+
+            // Header & Info
+            document.getElementById('detail-item-icon').textContent = currentItem.icon;
+            document.getElementById('detail-item-img-label').textContent = `구분: ${currentItem.material}`;
+            document.getElementById('detail-item-material-badge').textContent = `재질: ${currentItem.material}`;
+            document.getElementById('detail-item-name').textContent = `${currentItem.name} 세척 가이드`;
+
+            // Fallback Rule
+            document.getElementById('detail-fallback-rule').textContent = currentItem.fallbackRule;
+
+            // Core 4 steps grid binding
+            const stepsGrid = document.getElementById('detail-steps-grid');
+            stepsGrid.innerHTML = currentItem.basicSteps.map((step, idx) => `
+                <div class="p-2 border border-slate-300 bg-slate-50 rounded text-left">
+                    <span class="font-bold text-slate-900 block text-[10px] mb-0.5">${idx + 1}단계</span>
+                    <span class="text-[9.5px] text-slate-600 leading-tight block">${step}</span>
+                </div>
+            `).join('');
+
+            // Update level dynamic display
+            selectPollutionLevel(selectedLevel);
+            updateBookmarkButtonUI();
+        }
+
+        function selectPollutionLevel(levelKey) {
+            selectedLevel = levelKey;
+
+            // UI Tab highlighting
+            ['level1', 'level2', 'level3'].forEach((lk, idx) => {
+                const btn = document.getElementById(`level-tab-${idx + 1}`);
+                if (lk === levelKey) {
+                    btn.className = 'flex-1 py-1 text-[10px] font-bold border border-slate-900 rounded bg-slate-900 text-white shadow-sm';
+                } else {
+                    btn.className = 'flex-1 py-1 text-[10px] font-medium border border-slate-300 rounded bg-white text-slate-600 hover:bg-slate-100';
+                }
+            });
+
+            const guide = currentItem.pollutionGuides[levelKey];
+            const badgeEl = document.getElementById('detail-level-badge');
+
+            if (levelKey === 'level1') {
+                badgeEl.textContent = 'Level 1 (양호)';
+                badgeEl.className = 'text-[10px] font-mono bg-emerald-700 text-white px-2 py-0.5 rounded font-bold';
+            } else if (levelKey === 'level2') {
+                badgeEl.textContent = 'Level 2 (보통)';
+                badgeEl.className = 'text-[10px] font-mono bg-slate-800 text-white px-2 py-0.5 rounded font-bold';
+            } else {
+                badgeEl.textContent = 'Level 3 (심함)';
+                badgeEl.className = 'text-[10px] font-mono bg-rose-700 text-white px-2 py-0.5 rounded font-bold';
+            }
+
+            document.getElementById('detail-status-desc').textContent = guide.statusDescription;
+            document.getElementById('detail-final-disposal').textContent = guide.finalDisposal;
+            document.getElementById('detail-detergent').textContent = guide.recommendedDetergent;
+            document.getElementById('detail-cleaning-tip').textContent = guide.cleaningTip;
+        }
+
+        /* ==========================================================================
+           7. BOOKMARK & MY PAGE SYSTEM (PAGE 4)
+           ========================================================================== */
+        function toggleBookmarkCurrentItem() {
+            if (!currentItem) return;
+            const id = currentItem.itemId;
+            const index = bookmarks.indexOf(id);
+
+            if (index > -1) {
+                bookmarks.splice(index, 1);
+            } else {
+                bookmarks.push(id);
+            }
+
+            saveStorage();
+            updateBookmarkButtonUI();
+        }
+
+        function updateBookmarkButtonUI() {
+            const isBookmarked = bookmarks.includes(currentItem.itemId);
+            const headerBtn = document.getElementById('detail-bookmark-btn');
+            const icon = document.getElementById('bookmark-icon');
+            const text = document.getElementById('bookmark-text');
+            const actionBtn = document.getElementById('action-bookmark-btn');
+
+            if (isBookmarked) {
+                headerBtn.textContent = '★';
+                headerBtn.classList.add('text-amber-500', 'border-amber-400');
+                icon.textContent = '★';
+                text.textContent = '보관함에서 제거';
+                actionBtn.className = 'w-full wireframe-btn py-2 text-xs rounded shadow-sm flex items-center justify-center gap-1 bg-amber-500 text-white border-amber-600 font-bold';
+            } else {
+                headerBtn.textContent = '☆';
+                headerBtn.classList.remove('text-amber-500', 'border-amber-400');
+                icon.textContent = '☆';
+                text.textContent = '보관함에 추가하기';
+                actionBtn.className = 'w-full wireframe-btn py-2 text-xs rounded shadow-sm flex items-center justify-center gap-1 bg-slate-900 text-white border-slate-900 font-bold';
+            }
+        }
+
+        function switchMyTab(tab) {
+            activeMyTab = tab;
+            const bmBtn = document.getElementById('tab-btn-bookmarks');
+            const rcBtn = document.getElementById('tab-btn-recent');
+
+            if (tab === 'bookmarks') {
+                bmBtn.className = 'flex-1 pb-1.5 border-b-2 border-slate-900 font-bold text-slate-900 text-center';
+                rcBtn.className = 'flex-1 pb-1.5 text-slate-400 text-center font-medium border-b-2 border-transparent';
+            } else {
+                rcBtn.className = 'flex-1 pb-1.5 border-b-2 border-slate-900 font-bold text-slate-900 text-center';
+                bmBtn.className = 'flex-1 pb-1.5 text-slate-400 text-center font-medium border-b-2 border-transparent';
+            }
+
+            renderMyPage();
+        }
+
+        function renderMyPage() {
+            document.getElementById('bookmark-count').textContent = bookmarks.length;
+            const filledState = document.getElementById('saved-state-filled');
+            const emptyState = document.getElementById('saved-state-empty');
+
+            const targetIds = activeMyTab === 'bookmarks' ? bookmarks : recentViews;
+            const itemsToRender = targetIds.map(id => itemDatabase.items.find(i => i.itemId === id)).filter(Boolean);
+
+            if (itemsToRender.length === 0) {
+                filledState.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                filledState.classList.remove('hidden');
+
+                filledState.innerHTML = itemsToRender.map(item => `
+                    <div class="wireframe-card p-2.5 rounded-lg flex items-center justify-between shadow-sm">
+                        <div onclick="openItemDetail('${item.itemId}')" class="flex items-center gap-2.5 cursor-pointer flex-1">
+                            <div class="w-9 h-9 bg-slate-100 border border-slate-300 rounded flex items-center justify-center text-lg shrink-0">
+                                ${item.icon}
+                            </div>
+                            <div>
+                                <strong class="block text-xs font-bold text-slate-900">${item.name}</strong>
+                                <span class="text-[10px] text-slate-500">${item.material} · ${item.pollutionGuides.level2.recommendedDetergent}</span>
+                            </div>
+                        </div>
+                        <button onclick="removeBookmarkItem('${item.itemId}')" class="text-xs text-slate-400 hover:text-red-600 px-2 py-1 font-bold">✕</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function removeBookmarkItem(id) {
+            if (activeMyTab === 'bookmarks') {
+                bookmarks = bookmarks.filter(bId => bId !== id);
+            } else {
+                recentViews = recentViews.filter(rId => rId !== id);
+            }
+            saveStorage();
+            renderMyPage();
+        }
+
+        function clearAllBookmarks() {
+            if (activeMyTab === 'bookmarks') {
+                bookmarks = [];
+            } else {
+                recentViews = [];
+            }
+            saveStorage();
+            renderMyPage();
+        }
+
+        /* ==========================================================================
+           8. AI CAMERA SCANNER SIMULATOR MODAL
+           ========================================================================== */
+        function openCameraModal() {
+            document.getElementById('camera-modal').classList.remove('hidden');
+        }
+
+        function closeCameraModal() {
+            document.getElementById('camera-modal').classList.add('hidden');
+        }
+
+        function simulateScan(itemId) {
+            scannedItemId = itemId;
+            const target = itemDatabase.items.find(i => i.itemId === itemId);
+            if (target) {
+                document.getElementById('modal-preview-icon').textContent = target.icon;
+                document.getElementById('modal-scan-status').textContent = `[분석완료] ${target.name} 감지됨`;
+            }
+        }
+
+        function executeScanResult() {
+            closeCameraModal();
+            const target = itemDatabase.items.find(i => i.itemId === scannedItemId) || itemDatabase.items[0];
+            
+            // Set Banner Details
+            document.getElementById('ai-banner-img').textContent = target.icon;
+            document.getElementById('ai-banner-title').textContent = target.name;
+            document.getElementById('ai-banner-desc').textContent = `오염 상태: ${target.pollutionGuides.level2.statusDescription}`;
+            
+            openItemDetail(target.itemId);
+        }
+
+        function openDetailFromAI() {
+            openItemDetail(scannedItemId);
+        }
+
+        /* Real-time Clock Simulator */
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+            document.querySelectorAll('#current-time').forEach(el => el.textContent = timeStr);
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 30000);
+            renderItemList();
+            switchPage('page-home');
+        });
+    </script>
+</body>
+</html>
